@@ -85,10 +85,39 @@
                 </button>
             </div>
         </nav>
-    </div>
 
-    <!-- script -->
-     <script src="./script.js"> </script>
+        <main class="flex-grow container mx-auto px-4 py-8 max-w-7xl">
+            <div class="mb-8">
+                <div class="flex flex-nowrap overflow-x-auto gap-2 mb-6 border-b border-[#30363d] pb-4 no-scrollbar">
+                    <button data-tab="all"
+                        class="tab-btn active px-4 py-2 rounded-md text-sm font-medium hover:bg-[#21262d] transition-colors relative flex items-center gap-2">
+                        <i class="fa-solid fa-list-ul text-xs"></i>
+                        All Issues
+                        <span id="all-count"
+                            class="tab-count bg-[#30363d] text-[#8b949e] px-1.5 py-0.5 rounded-full text-[10px]">0</span>
+                    </button>
+                    <button data-tab="open"
+                        class="tab-btn px-4 py-2 rounded-md text-sm font-medium hover:bg-[#21262d] transition-colors relative flex items-center gap-2">
+                        <i class="fa-solid fa-circle-dot text-xs text-[#3fb950]"></i>
+                        Open
+                        <span id="open-count"
+                            class="tab-count bg-[#30363d] text-[#8b949e] px-1.5 py-0.5 rounded-full text-[10px]">0</span>
+                    </button>
+                    <button data-tab="closed"
+                        class="tab-btn px-4 py-2 rounded-md text-sm font-medium hover:bg-[#21262d] transition-colors relative flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check text-xs text-[#a371f7]"></i>
+                        Closed
+                        <span id="closed-count"
+                            class="tab-count bg-[#30363d] text-[#8b949e] px-1.5 py-0.5 rounded-full text-[10px]">0</span>
+                    </button>
+                </div>
+
+
+
+            </div>
+
+            <!-- script -->
+            <script src="./script.js"> </script>
 </body>
 
 </html>
