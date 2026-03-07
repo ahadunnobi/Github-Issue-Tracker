@@ -2,6 +2,8 @@ const credential = {
     username: 'admin',
     password: 'admin123'
 };
+const loginContainer = document.getElementById('login-container');
+const mainContent = document.getElementById('main-content');
 const loginForm = document.getElementById('login-form');
 
 loginForm.addEventListener('submit', (e) => {
@@ -17,6 +19,11 @@ loginForm.addEventListener('submit', (e) => {
     }
 });
 function showMainDashboard() {
-    alert('hi ned')
-    
+    loginContainer.classList.add('hidden');
+    mainContent.classList.remove('hidden');
+    // Change body classes for main content
+    document.body.classList.remove('justify-center', 'items-center');
+    document.body.classList.add('bg-[#0d1117]');
+
+    fetchIssues();
 }
