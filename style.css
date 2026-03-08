@@ -29,28 +29,28 @@
   border: 1px solid rgba(163, 113, 247, 0.3);
 }
 
-/* Dynamic Label Styling */
+
 .tag-bug {
-  background-color: #fff1f2;
+  background-color: rgba(255, 90, 95, 0.15);
   color: #ff5a5f;
   border: 1px solid rgba(255, 90, 95, 0.3);
 }
 
 .tag-enhancement {
-  background-color: #dafbe1;
-  color: #1a7f37;
+  background-color: rgba(26, 127, 55, 0.15);
+  color: #3fb950;
   border: 1px solid rgba(26, 127, 55, 0.3);
 }
 
 .tag-help-wanted {
-  background-color: #fff9eb;
-  color: #9a6700;
+  background-color: rgba(217, 119, 6, 0.15);
+  color: #d97706;
   border: 1px solid rgba(217, 119, 6, 0.3);
 }
 
 .tag-documentation {
-  background-color: #ddf4ff;
-  color: #0969da;
+  background-color: rgba(9, 105, 218, 0.15);
+  color: #58a6ff;
   border: 1px solid rgba(9, 105, 218, 0.3);
 }
 

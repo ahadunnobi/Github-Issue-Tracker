@@ -67,7 +67,7 @@ const getLabelConfig = (labelName) => {
 const displayIssues = (issues = []) => {
     if (!issueContainer) return;
 
-    // Update Header
+
     const issueHeader = document.getElementById('issue-header');
     if (issueHeader) {
         const activeTab = document.querySelector('.tab-btn.active')?.getAttribute('data-tab') || 'all';
@@ -170,8 +170,97 @@ const displayIssues = (issues = []) => {
                 <span class="text-[11.5px] text-[#8b949e]">${issue.createdAt ? new Date(issue.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A'}</span>
             </div>
         `;
+        card.addEventListener('click', () => openIssueModal(issue));
         issueContainer.appendChild(card);
     });
+};
+
+const openIssueModal = (issue) => {
+    const modal = document.getElementById('issue_modal');
+    const modalContent = document.getElementById('modal-content');
+    const modalBox = modal.querySelector('.modal-box');
+    if (!modal || !modalContent || !modalBox) return;
+
+    const status = (issue.status || 'open').toLowerCase();
+    const isClosed = status === 'closed';
+    const statusText = isClosed ? 'Closed' : 'Opened';
+    const statusClass = isClosed ? 'status-closed' : 'status-open';
+    const priority = (issue.priority || 'low').toLowerCase();
+    const priorityClass = `priority-${priority}`;
+    const topBorderColor = isClosed ? 'border-t-[#a371f7]' : 'border-t-[#3fb950]';
+
+
+    let displayAssignee = (issue.assignee && issue.assignee.toLowerCase() !== 'unassigned')
+        ? issue.assignee
+        : (issue.author || 'No Assignee');
+
+    let labels = [];
+    if (issue.labels) {
+        labels = Array.isArray(issue.labels) ? issue.labels : issue.labels.split(',').map(l => l.trim());
+    } else if (issue.label) {
+        labels = Array.isArray(issue.label) ? issue.label : issue.label.split(',').map(l => l.trim());
+    }
+
+    const date = issue.createdAt ? new Date(issue.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: '2-digit', year: 'numeric' }) : 'N/A';
+
+    modalBox.className = `modal-box max-w-2xl bg-[#161b22] text-[#c9d1d9] p-0 border-t-4 ${topBorderColor} border-x border-b border-[#30363d] shadow-2xl`;
+
+    modalContent.innerHTML = `
+        <div class="flex justify-between items-start mb-4">
+           <h2 class="text-[32px] font-bold text-white leading-tight">${issue.title || 'No Title'}</h2>
+           <span class="text-[#8b949e] font-bold text-[14px]">#${issue.id || '0'}</span>
+        </div>
+        
+        <div class="flex items-center gap-2 mb-6 text-[14px] text-[#8b949e]">
+            <span class="px-2.5 py-0.5 rounded-md font-bold flex items-center gap-1.5 ${statusClass} text-[11px] uppercase">
+                <i class="fa-solid ${isClosed ? 'fa-circle-check' : 'fa-circle-dot'} text-[10px]"></i>
+                ${statusText}
+            </span>
+            <span class="opacity-40 text-[10px]">•</span>
+            <span>Opened by <span class="font-bold text-white">${issue.author || 'unknown'}</span></span>
+            <span class="opacity-40 text-[10px]">•</span>
+            <span>${date}</span>
+        </div>
+
+        <div class="flex flex-wrap gap-1 mb-8">
+            ${labels.map(label => {
+        const config = getLabelConfig(label);
+        return `
+                    <span class="text-[10px] px-2 py-[1px] rounded-full ${config.class} font-bold uppercase flex items-center gap-0.5">
+                        <i class="fa-solid ${config.icon} text-[10px]"></i>
+                        ${label.toUpperCase()}
+                    </span>
+                `;
+    }).join('')}
+        </div>
+
+        <div class="mb-8">
+            <p class="text-[15px] text-[#8b949e] leading-relaxed opacity-90">
+                ${issue.description || 'No description available...'}
+            </p>
+        </div>
+
+        <div class="bg-[#0d1117] border border-[#30363d] rounded-xl p-5 flex justify-between items-center mb-8">
+            <div class="flex flex-col gap-0.5">
+                <span class="text-[12px] text-[#8b949e] font-bold uppercase tracking-wider opacity-60">Assignee</span>
+                <span class="text-[16px] font-bold text-white">${displayAssignee}</span>
+            </div>
+            <div class="flex flex-col gap-0.5 items-end">
+                <span class="text-[12px] text-[#8b949e] font-bold uppercase tracking-wider opacity-60">Priority</span>
+                <span class="text-[14px] font-bold ${priorityClass} uppercase tracking-wide">
+                    ${priority.toUpperCase()}
+                </span>
+            </div>
+        </div>
+
+        <div class="flex justify-end pt-4 border-t border-[#30363d]">
+            <button onclick="document.getElementById('issue_modal').close()" class="px-8 py-2 bg-[#21262d] hover:bg-[#30363d] hover:text-white border border-[#30363d] text-[#c9d1d9] rounded-md font-bold transition-all text-sm shadow-sm active:scale-95">
+                Close
+            </button>
+        </div>
+    `;
+
+    modal.showModal();
 };
 
 tabButtons.forEach(btn => {
