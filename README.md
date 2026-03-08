@@ -1,126 +1,30 @@
 # 🌟 Welcome To (সহজ সরল সিম্পল) Assignment - 5
 
-# **📅 Deadline For 60 marks:** 9th March, 2026 (11:59 pm ⏱️)  
-#  📅 No Deadline For 50 marks  
-# **📅 Deadline For 30 marks:** Any time after 9th March.
+---
+
+### **Questions & Answers**
+
+- 1️⃣ **What is the difference between var, let, and const?**  
+  `var` is the oldest way to declare variables and is function-scoped. It can be redeclared and updated anywhere in its scope, which sometimes leads to bugs. `let` and `const` are modern and block-scoped (only exist within `{ }`). Use `let` for values that will change and `const` for values that should stay exactly the same.
+
+- 2️⃣ **What is the spread operator (...)?**  
+  It’s a handy tool written as three dots (`...`) that allows you to "spread" the contents of an array or object into another. It’s perfect for making quick copies or merging data without changing the original source.
+
+- 3️⃣ **What is the difference between map(), filter(), and forEach()?**  
+  `forEach()` simply loops through an array to perform an action but doesn't return anything. `map()` transforms every item and gives you a brand-new array of the same length. `filter()` checks each item against a condition and returns a new array containing only the items that passed.
+
+- 4️⃣ **What is an arrow function?**  
+  Arrow functions are a shorter and cleaner way to write functions using the `=>` syntax. They are anonymous and don't have their own `this` context, making them very useful for callbacks and keeping your code readable.
+
+- 5️⃣ **What are template literals?**  
+  Template literals use backticks (`` ` ``) instead of quotes. They make it incredibly easy to embed variables directly into strings using `${variable}` and let you write multi-line text without needing messy escape characters.
 
 ---
 
-# Assignment-05: GitHub Issues Tracker
+### **Project Links**
 
-
-### **API Endpoints:**
-###  **All Issues:** 
-  - https://phi-lab-server.vercel.app/api/v1/lab/issues 
-
-
-###  **Single Issue:**
-   - https://phi-lab-server.vercel.app/api/v1/lab/issue/{id}
-
-   - Example: https://phi-lab-server.vercel.app/api/v1/lab/issue/33
-
-
-###  **Search Issue:** https://phi-lab-server.vercel.app/api/v1/lab/issues/search?q={searchText}
-
-   - Example:  https://phi-lab-server.vercel.app/api/v1/lab/issues/search?q=notifications
-
-
----
-
-## 📝 Main Requirements
-
-## 🎨 Design Part
-
-## Login Page
-- Create a login page containing a logo, title, and sub-title
-- Below that, there will be 2 inputs, a sign-in button, and a demo credential to sign in. Follow the Figma for this page 
-- Styled as per Figma
-
-## Main Page: 
-
-### Navbar: 
-
-- Navbar with website logo/name on the left
-- Search input and button on the right
-
-### Tab Section like Figma: 
-
-- 3 tab ( All, Open, Closed) at the top of this section.(**All**, **Open**, **Closed**)
-
-- Below the tab, there will be an icon, the issue count, some text on the left, and an open and closed marker on the right
-
-- Responsiveness: The website should be responsive for mobile devices. It is totally up to you. 
-
-
---- 
-
-
-## ⚙️ Functionalities
-- In login page, there will be default admin credentials (username, password). You need to sign in using these credentials.
-
-- Load all issues and display as per Figma
-
-- On clicking on an open or closed tab, it will load the issues data of the related tab and show it in a display-like card in a 4-column layout like Figma. By default, it will show all data 
-
-- Each card shows:
-  - Title
-  - Description
-  - Status 
-  - Author
-  - Priority
-  - Label
-  - CreatedAt
-- Clicking on an issue  card will open a modal and show all the information about that Issue. 
-
-### 🚀 Challenges
-
-
-- Show the card Top border based on their category(open, closed), open card will have Green Boder, closed card will have a purple border on top. 
-
-- Loading spinner on data load
-
-- Show active button on changing category names
-
-- Implement Search Functionality and 8 meaningful github commit.  
-
-- Create a readme file and answer this question on your own. Don’t copy-paste from Google or any AI chatbot. 
-    - 1️⃣ What is the difference between var, let, and const?
-    - 2️⃣ What is the spread operator (...)?
-    - 3️⃣ What is the difference between map(), filter(), and forEach()?
-    - 4️⃣ What is an arrow function?
-    - 5️⃣ What are template literals?
-
-
----
-
-## 🛠️ Technology Stack
-
-- **HTML**
-- **CSS** (Vanilla/Tailwind/DaisyUI)
-- **JavaScript** (Vanilla)
-
----
-
-## 🔑 Demo Credentials
-
-```text
-Username: admin
-Password: admin123
-```
-
-
----
-
-### Optional: 
- - No need to show status: Open, Closed styles On modals. 
- - No Need to show icon on labels 
- - No need to apply styles on Priority 
---- 
-
-
-## 📤 What to submit
-
-- **GitHub Repository Link:**
-- **Live Site Link:**
+- **GitHub Repository Link:** [Ahadunnobi / Github-Issue-Tracker](https://github.com/ahadunnobi/Github-Issue-Tracker)
+- **Live Site Link:** [GitHub Issue Tracker Live](https://ven-issue-tracker.netlify.app/)
+- **LinkedIn Profile:** [Ahadunnobi](https://www.linkedin.com/in/ahadunnobi)
 
 ---

@@ -34,14 +34,27 @@ function showMainDashboard() {
     mainContent.classList.remove('hidden');
 }
 
-const loadInitialData = () => {
-    fetch(`${API_BASE_URL}/issues`)
-        .then(res => res.json())
-        .then(data => {
-            allIssuesStore = data.data || [];
-            updateTabCounts();
-            displayIssues(allIssuesStore);
-        });
+const manageSpinner = (status) => {
+    const spinner = document.getElementById('loading-spinner');
+    if (spinner && issueContainer) {
+        if (status) {
+            spinner.classList.remove('hidden');
+            issueContainer.classList.add('hidden');
+        } else {
+            spinner.classList.add('hidden');
+            issueContainer.classList.remove('hidden');
+        }
+    }
+};
+
+const loadInitialData = async () => {
+    manageSpinner(true);
+    const res = await fetch(`${API_BASE_URL}/issues`);
+    const data = await res.json();
+    allIssuesStore = data.data || [];
+    updateTabCounts();
+    displayIssues(allIssuesStore);
+    manageSpinner(false);
 };
 
 const updateTabCounts = () => {
@@ -104,7 +117,12 @@ const displayIssues = (issues = []) => {
     issueContainer.innerHTML = '';
 
     if (issues.length === 0) {
-        issueContainer.innerHTML = '<div class="text-white text-center py-10 opacity-50 bg-[#161b22] border border-[#30363d] rounded-lg">No issues found.</div>';
+        issueContainer.innerHTML = `
+            <div class="col-span-full flex flex-col items-center justify-center py-20 bg-[#161b22] border border-[#30363d] rounded-lg">
+                <i class="fa-solid fa-circle-exclamation text-[#8b949e] text-5xl mb-4"></i>
+                <p class="text-[#8b949e] text-lg font-medium">No issues found matching your criteria.</p>
+            </div>
+        `;
         return;
     }
 
@@ -267,7 +285,10 @@ const searchInput = document.getElementById('search-input');
 const searchBtn = document.getElementById('search-btn');
 const clearSearchBtn = document.getElementById('clear-search');
 
-const applyFilters = () => {
+const applyFilters = async () => {
+    manageSpinner(true);
+    await new Promise(resolve => setTimeout(resolve, 300));
+
     const activeTab = document.querySelector('.tab-btn.active')?.getAttribute('data-tab') || 'all';
     const query = (searchInput.value || '').toLowerCase().trim();
 
@@ -280,6 +301,7 @@ const applyFilters = () => {
     });
 
     displayIssues(filtered);
+    manageSpinner(false);
 };
 
 tabButtons.forEach(btn => {
