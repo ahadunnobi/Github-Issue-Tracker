@@ -65,8 +65,7 @@
 - Each card shows:
   - Title
   - Description
-  - Status
-  - Category
+  - Status 
   - Author
   - Priority
   - Label
@@ -125,5 +124,3 @@ Password: admin123
 - **Live Site Link:**
 
 ---
-
-
