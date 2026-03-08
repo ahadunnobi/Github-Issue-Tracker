@@ -11,6 +11,9 @@ const issueContainer = document.getElementById('issue-container');
 const allCount = document.getElementById('all-count');
 const openCount = document.getElementById('open-count');
 const closedCount = document.getElementById('closed-count');
+const tabButtons = document.querySelectorAll('.tab-btn');
+
+let allIssuesStore = [];
 
 loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -20,7 +23,7 @@ loginForm.addEventListener('submit', (e) => {
 
     if (username === credential.username && password === credential.password) {
         showMainDashboard();
-        loadAllIssues();
+        loadInitialData();
     } else {
         alert('Invalid credentials. Please use the demo credentials provided below.');
     }
@@ -31,49 +34,50 @@ function showMainDashboard() {
     mainContent.classList.remove('hidden');
 }
 
-const loadAllIssues = () => {
+const loadInitialData = () => {
     fetch(`${API_BASE_URL}/issues`)
         .then(res => res.json())
         .then(data => {
-            const issues = data.data;
-            const openIssues = issues.filter(issue => issue.status.toLowerCase() === 'open');
-            const closedIssues = issues.filter(issue => issue.status.toLowerCase() === 'closed');
-
-            allCount.innerText = issues.length;
-            openCount.innerText = openIssues.length;
-            closedCount.innerText = closedIssues.length;
-
-            displayIssues(issues);
+            allIssuesStore = data.data;
+            updateTabCounts();
+            displayIssues(allIssuesStore);
         });
 };
 
+const updateTabCounts = () => {
+    const openCountValue = allIssuesStore.filter(i => i.status.toLowerCase() === 'open').length;
+    const closedCountValue = allIssuesStore.filter(i => i.status.toLowerCase() === 'closed').length;
 
+    if (allCount) allCount.innerText = allIssuesStore.length;
+    if (openCount) openCount.innerText = openCountValue;
+    if (closedCount) closedCount.innerText = closedCountValue;
+};
 
 const displayIssues = (issues) => {
     issueContainer.innerHTML = '';
     issues.forEach(issue => {
         const card = document.createElement('div');
         const isClosed = issue.status.toLowerCase() === 'closed';
-        const topBorder = isClosed ? 'border-[#a371f7]' : 'border-[#3fb950]';
+        const topBorderClass = isClosed ? 'border-closed' : 'border-open';
         const statusIcon = isClosed
             ? '<i class="fa-solid fa-circle-check text-[#a371f7]"></i>'
             : '<i class="fa-solid fa-circle-notch fa-spin text-[#3fb950]"></i>';
 
-        const priorityClass = issue.priority.toLowerCase() === 'high' ? 'priority-high' : 'priority-low';
+        const priorityClass = issue.priority?.toLowerCase() === 'high' ? 'priority-high' : 'priority-low';
 
-        card.className = `bg-[#161b22] border-t-4 ${topBorder} border-x border-b border-[#30363d] rounded-lg p-6 shadow-sm flex flex-col gap-4`;
+        card.className = `bg-[#161b22] border-t-4 ${topBorderClass} border-x border-b border-[#30363d] rounded-lg p-6 shadow-sm flex flex-col gap-4`;
 
         card.innerHTML = `
             <div class="flex justify-between items-center">
                 <div class="w-8 h-8 rounded-full bg-[#f0f6fc] flex items-center justify-center text-sm">
                     ${statusIcon}
                 </div>
-                <span class="text-[10px] px-4 py-1.5 rounded-full font-bold uppercase tracking-wider ${priorityClass}">${issue.priority}</span>
+                <span class="text-[10px] px-4 py-1.5 rounded-full font-bold uppercase tracking-wider ${priorityClass}">${issue.priority || 'LOW'}</span>
             </div>
             
             <div>
-                <h3 class="font-bold text-[#fff9eb] text-lg mb-2 line-clamp-2 leading-snug">${issue.title}</h3>
-                <p class="text-sm text-[#636c76] line-clamp-2 leading-relaxed h-10">${issue.description}</p>
+                <h3 class="font-bold text-[#fff9eb] text-lg mb-2 line-clamp-2 leading-snug">${issue.title || 'No Title'}</h3>
+                <p class="text-sm text-[#fff9eb] line-clamp-2 leading-relaxed h-10">${issue.description || 'No description available...'}</p>
             </div>
 
             <div class="flex flex-wrap gap-2">
@@ -86,12 +90,31 @@ const displayIssues = (issues) => {
             </div>
 
             <div class="pt-4 border-t border-[#f6f8fa] mt-auto">
-                <p class="text-[13px] text-[#636c76] mb-1">#${issue.id} by <span class="font-medium">${issue.author}</span></p>
-                <p class="text-[13px] text-[#636c76]">${new Date(issue.createdAt).toLocaleDateString()}</p>
+                <p class="text-[13px] text-[#636c76] mb-1">#${issue.id || '0'} by <span class="font-medium">${issue.author}</span></p>
+                <p class="text-[13px] text-[#636c76]">${issue.createdAt ? new Date(issue.createdAt).toLocaleDateString() : 'N/A'}</p>
             </div>
         `;
         issueContainer.appendChild(card);
     });
 };
 
+tabButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        // Manage active styling
+        tabButtons.forEach(b => {
+            b.classList.remove('active');
+            // Remove text colors and hover states to let CSS handle it
+            b.classList.add('text-[#8b949e]');
+        });
+        btn.classList.add('active');
+        btn.classList.remove('text-[#8b949e]');
 
+        const tab = btn.getAttribute('data-tab');
+        if (tab === 'all') {
+            displayIssues(allIssuesStore);
+        } else {
+            const filtered = allIssuesStore.filter(i => i.status.toLowerCase() === tab);
+            displayIssues(filtered);
+        }
+    });
+});
