@@ -38,60 +38,105 @@ const loadInitialData = () => {
     fetch(`${API_BASE_URL}/issues`)
         .then(res => res.json())
         .then(data => {
-            allIssuesStore = data.data;
+            allIssuesStore = data.data || [];
             updateTabCounts();
             displayIssues(allIssuesStore);
-        });
+        })
+
 };
 
 const updateTabCounts = () => {
-    const openCountValue = allIssuesStore.filter(i => i.status.toLowerCase() === 'open').length;
-    const closedCountValue = allIssuesStore.filter(i => i.status.toLowerCase() === 'closed').length;
+    const issues = allIssuesStore || [];
+    const openCountValue = issues.filter(i => (i.status || '').toLowerCase() === 'open').length;
+    const closedCountValue = issues.filter(i => (i.status || '').toLowerCase() === 'closed').length;
 
-    if (allCount) allCount.innerText = allIssuesStore.length;
+    if (allCount) allCount.innerText = issues.length;
     if (openCount) openCount.innerText = openCountValue;
     if (closedCount) closedCount.innerText = closedCountValue;
 };
 
-const displayIssues = (issues) => {
+
+const getLabelConfig = (labelName) => {
+    if (!labelName) return { class: 'tag-default', icon: 'fa-tag' };
+    const name = labelName.toLowerCase().trim();
+    if (name.includes('bug')) return { class: 'tag-bug', icon: 'fa-face-smile-wink' };
+    if (name.includes('enhancement')) return { class: 'tag-enhancement', icon: 'fa-wand-magic-sparkles' };
+    if (name.includes('help wanted')) return { class: 'tag-help-wanted', icon: 'fa-life-ring' };
+    if (name.includes('documentation')) return { class: 'tag-documentation', icon: 'fa-book' };
+    return { class: 'tag-default', icon: 'fa-tag' };
+};
+
+const displayIssues = (issues = []) => {
+    if (!issueContainer) return;
     issueContainer.innerHTML = '';
+
+    if (issues.length === 0) {
+        issueContainer.innerHTML = '<div class="text-white text-center py-10 opacity-50">No issues found for this category.</div>';
+        return;
+    }
+
     issues.forEach(issue => {
         const card = document.createElement('div');
-        const isClosed = issue.status.toLowerCase() === 'closed';
-        const topBorderClass = isClosed ? 'border-closed' : 'border-open';
-        const statusIcon = isClosed
-            ? '<i class="fa-solid fa-circle-check text-[#a371f7]"></i>'
-            : '<i class="fa-solid fa-circle-notch fa-spin text-[#3fb950]"></i>';
+        const status = (issue.status || 'open').toLowerCase();
+        const isClosed = status === 'closed';
+        const priority = (issue.priority || 'low').toLowerCase();
 
-        const priorityClass = issue.priority?.toLowerCase() === 'high' ? 'priority-high' : 'priority-low';
+        // Fix: API uses 'labels' (array) instead of 'label'
+        let labels = [];
+        if (issue.labels) {
+            labels = Array.isArray(issue.labels) ? issue.labels : issue.labels.split(',').map(l => l.trim());
+        } else if (issue.label) {
+            labels = Array.isArray(issue.label) ? issue.label : issue.label.split(',').map(l => l.trim());
+        }
 
-        card.className = `bg-[#161b22] border-t-4 ${topBorderClass} border-x border-b border-[#30363d] rounded-lg p-6 shadow-sm flex flex-col gap-4`;
+        const statusClass = isClosed ? 'status-closed' : 'status-open';
+        const priorityClass = `priority-${priority}`;
+        const statusText = status.toUpperCase();
+        const priorityText = priority.toUpperCase();
+
+        const topBorderColor = isClosed ? 'border-t-[#a371f7]' : 'border-t-[#3fb950]';
+
+        card.className = `bg-[#161b22] border-t-4 ${topBorderColor} border-x border-b border-[#30363d] rounded-lg p-4 shadow-sm flex flex-col gap-3`;
 
         card.innerHTML = `
-            <div class="flex justify-between items-center">
-                <div class="w-8 h-8 rounded-full bg-[#f0f6fc] flex items-center justify-center text-sm">
-                    ${statusIcon}
+            <div class="flex justify-between items-start">
+                <div class="flex flex-col gap-1">
+                    <span class="text-[10px] px-2.5 py-0.5 rounded-md font-bold flex items-center gap-1.5 ${statusClass}">
+                        <i class="fa-solid ${isClosed ? 'fa-circle-check' : 'fa-circle-dot'} text-[10px]"></i>
+                        ${statusText}
+                    </span>
                 </div>
-                <span class="text-[10px] px-4 py-1.5 rounded-full font-bold uppercase tracking-wider ${priorityClass}">${issue.priority || 'LOW'}</span>
+                <div class="text-right">
+                    <p class="text-[11px] text-[#8b949e] font-bold">#${issue.id || '0'}</p>
+                    <p class="text-[11px] ${priorityClass}">${priorityText}</p>
+                </div>
             </div>
             
-            <div>
-                <h3 class="font-bold text-[#fff9eb] text-lg mb-2 line-clamp-2 leading-snug">${issue.title || 'No Title'}</h3>
-                <p class="text-sm text-[#fff9eb] line-clamp-2 leading-relaxed h-10">${issue.description || 'No description available...'}</p>
+            <div class="">
+                <h3 class="font-bold text-[#fff9eb] text-[16px] mb-1 line-clamp-2 leading-tight">${issue.title || 'No Title'}</h3>
+                <p class="text-[12.5px] text-[#fff9eb] line-clamp-2 leading-relaxed opacity-70 mb-2">${issue.description || 'No description available...'}</p>
             </div>
 
-            <div class="flex flex-wrap gap-2">
-                <span class="text-[11px] px-3 py-1 rounded-full tag-bug flex items-center gap-1.5 font-bold uppercase">
-                    <i class="fa-solid fa-face-smile-wink text-[12px]"></i> BUG
-                </span>
-                <span class="text-[11px] px-3 py-1 rounded-full tag-help flex items-center gap-1.5 font-bold uppercase">
-                    <i class="fa-solid fa-life-ring text-[12px]"></i> HELP WANTED
-                </span>
+            <div class="flex flex-wrap gap-1 mb-2">
+                ${labels.map(label => {
+            const config = getLabelConfig(label);
+            return `
+                        <span class="text-[10px] px-2 py-[1px] rounded-full ${config.class} font-bold uppercase flex items-center gap-0.5">
+                            <i class="fa-solid ${config.icon} text-[10px]"></i>
+                            ${label.toUpperCase()}
+                        </span>
+                    `;
+        }).join('')}
             </div>
 
-            <div class="pt-4 border-t border-[#f6f8fa] mt-auto">
-                <p class="text-[13px] text-[#636c76] mb-1">#${issue.id || '0'} by <span class="font-medium">${issue.author}</span></p>
-                <p class="text-[13px] text-[#636c76]">${issue.createdAt ? new Date(issue.createdAt).toLocaleDateString() : 'N/A'}</p>
+            <div class="pt-3 border-t border-[#30363d] mt-auto flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <div class="w-5 h-5 rounded-full bg-[#30363d] flex items-center justify-center text-[9px] text-white font-bold uppercase">
+                        ${String(issue.author || 'U').charAt(0)}
+                    </div>
+                    <span class="text-[11.5px] text-[#8b949e]">${issue.author || 'unknown'}</span>
+                </div>
+                <span class="text-[11.5px] text-[#8b949e]">${issue.createdAt ? new Date(issue.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A'}</span>
             </div>
         `;
         issueContainer.appendChild(card);
@@ -100,10 +145,8 @@ const displayIssues = (issues) => {
 
 tabButtons.forEach(btn => {
     btn.addEventListener('click', () => {
-        // Manage active styling
         tabButtons.forEach(b => {
             b.classList.remove('active');
-            // Remove text colors and hover states to let CSS handle it
             b.classList.add('text-[#8b949e]');
         });
         btn.classList.add('active');
@@ -113,7 +156,7 @@ tabButtons.forEach(btn => {
         if (tab === 'all') {
             displayIssues(allIssuesStore);
         } else {
-            const filtered = allIssuesStore.filter(i => i.status.toLowerCase() === tab);
+            const filtered = (allIssuesStore || []).filter(i => (i.status || '').toLowerCase() === tab);
             displayIssues(filtered);
         }
     });
