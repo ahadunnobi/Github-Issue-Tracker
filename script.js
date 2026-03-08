@@ -41,8 +41,7 @@ const loadInitialData = () => {
             allIssuesStore = data.data || [];
             updateTabCounts();
             displayIssues(allIssuesStore);
-        })
-
+        });
 };
 
 const updateTabCounts = () => {
@@ -54,7 +53,6 @@ const updateTabCounts = () => {
     if (openCount) openCount.innerText = openCountValue;
     if (closedCount) closedCount.innerText = closedCountValue;
 };
-
 
 const getLabelConfig = (labelName) => {
     if (!labelName) return { class: 'tag-default', icon: 'fa-tag' };
@@ -68,10 +66,45 @@ const getLabelConfig = (labelName) => {
 
 const displayIssues = (issues = []) => {
     if (!issueContainer) return;
+
+    // Update Header
+    const issueHeader = document.getElementById('issue-header');
+    if (issueHeader) {
+        const activeTab = document.querySelector('.tab-btn.active')?.getAttribute('data-tab') || 'all';
+        let count = issues.length;
+        let title = `${count} Issues`;
+        let subText = 'Track and manage your project issues';
+
+        if (activeTab === 'open') title = `${count} Open Issues`;
+        else if (activeTab === 'closed') title = `${count} Closed Issues`;
+
+        issueHeader.innerHTML = `
+            <div class="issue-header-container shadow-sm mb-4">
+                <div class="flex items-center gap-4">
+                    <div class="header-icon-circle">
+                         <i class="font-bold text-black fa-solid fa-bug"></i>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="font-bold text-white text-[20px] leading-tight">${title}</span>
+                        <span class="text-[#8b949e] text-[13px] font-medium">${subText}</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-5 text-[13px] font-bold text-[#8b949e]">
+                    <span class="flex items-center gap-2 hover:text-white cursor-pointer transition-colors">
+                        <i class="fa-solid fa-circle-dot text-[#3fb950] text-[12px]"></i> Open
+                    </span>
+                    <span class="flex items-center gap-2 hover:text-white cursor-pointer transition-colors">
+                        <i class="fa-solid fa-circle-check text-[#a371f7] text-[12px]"></i> Closed
+                    </span>
+                </div>
+            </div>
+        `;
+    }
+
     issueContainer.innerHTML = '';
 
     if (issues.length === 0) {
-        issueContainer.innerHTML = '<div class="text-white text-center py-10 opacity-50">No issues found for this category.</div>';
+        issueContainer.innerHTML = '<div class="text-white text-center py-10 opacity-50 bg-[#161b22] border border-[#30363d] rounded-lg">No issues found.</div>';
         return;
     }
 
@@ -81,7 +114,6 @@ const displayIssues = (issues = []) => {
         const isClosed = status === 'closed';
         const priority = (issue.priority || 'low').toLowerCase();
 
-        // Fix: API uses 'labels' (array) instead of 'label'
         let labels = [];
         if (issue.labels) {
             labels = Array.isArray(issue.labels) ? issue.labels : issue.labels.split(',').map(l => l.trim());
@@ -93,7 +125,6 @@ const displayIssues = (issues = []) => {
         const priorityClass = `priority-${priority}`;
         const statusText = status.toUpperCase();
         const priorityText = priority.toUpperCase();
-
         const topBorderColor = isClosed ? 'border-t-[#a371f7]' : 'border-t-[#3fb950]';
 
         card.className = `bg-[#161b22] border-t-4 ${topBorderColor} border-x border-b border-[#30363d] rounded-lg p-4 shadow-sm flex flex-col gap-3`;

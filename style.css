@@ -95,3 +95,28 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+.issue-header-container {
+  background-color: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-icon-circle {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-icon-inner {
+  color: #4a00ff;
+  font-size: 20px;
+}
