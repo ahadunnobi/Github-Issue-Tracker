@@ -8,6 +8,8 @@ const loginContainer = document.getElementById('login-container');
 const mainContent = document.getElementById('main-content');
 const loginForm = document.getElementById('login-form');
 const allCount = document.getElementById('all-count');
+const openCount = document.getElementById('open-count');
+const closedCount = document.getElementById('closed-count');
 
 loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -33,6 +35,12 @@ const loadAllIssues = () => {
         .then(res => res.json())
         .then(data => {
             const issues = data.data;
+            const openIssues = issues.filter(issue => issue.status.toLowerCase() === 'open');
+            const closedIssues = issues.filter(issue => issue.status.toLowerCase() === 'closed');
+
             allCount.innerText = issues.length;
+            openCount.innerText = openIssues.length;
+            closedCount.innerText = closedIssues.length;
         });
 };
+
