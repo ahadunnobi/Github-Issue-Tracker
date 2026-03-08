@@ -79,22 +79,22 @@ const displayIssues = (issues = []) => {
         else if (activeTab === 'closed') title = `${count} Closed Issues`;
 
         issueHeader.innerHTML = `
-            <div class="issue-header-container shadow-sm mb-4">
-                <div class="flex items-center gap-4">
-                    <div class="header-icon-circle">
+            <div class="issue-header-container shadow-sm mb-4 flex-wrap gap-y-4 md:gap-y-0 px-4 md:px-5">
+                <div class="flex items-center gap-3 md:gap-4">
+                    <div class="header-icon-circle scale-90 md:scale-100">
                          <i class="font-bold text-black fa-solid fa-bug"></i>
                     </div>
                     <div class="flex flex-col">
-                        <span class="font-bold text-white text-[20px] leading-tight">${title}</span>
-                        <span class="text-[#8b949e] text-[13px] font-medium">${subText}</span>
+                        <span class="font-bold text-white text-[18px] md:text-[20px] leading-tight">${title}</span>
+                        <span class="text-[#8b949e] text-[12px] md:text-[13px] font-medium">${subText}</span>
                     </div>
                 </div>
-                <div class="flex items-center gap-5 text-[13px] font-bold text-[#8b949e]">
+                <div class="flex items-center gap-4 md:gap-5 text-[12px] md:text-[13px] font-bold text-[#8b949e] w-full md:w-auto border-t md:border-t-0 border-[#30363d] pt-3 md:pt-0">
                     <span class="flex items-center gap-2 hover:text-white cursor-pointer transition-colors">
-                        <i class="fa-solid fa-circle-dot text-[#3fb950] text-[12px]"></i> Open
+                        <i class="fa-solid fa-circle-dot text-[#3fb950] text-[11px] md:text-[12px]"></i> Open
                     </span>
                     <span class="flex items-center gap-2 hover:text-white cursor-pointer transition-colors">
-                        <i class="fa-solid fa-circle-check text-[#a371f7] text-[12px]"></i> Closed
+                        <i class="fa-solid fa-circle-check text-[#a371f7] text-[11px] md:text-[12px]"></i> Closed
                     </span>
                 </div>
             </div>

@@ -31,18 +31,19 @@
                 <div class="mb-4">
                     <label for="username" class="block text-sm font-normal mb-2 text-[#c9d1d9]">Username</label>
                     <input type="text" id="username" name="username"
-                        class="w-full bg-[#0d1117] border border-[#30363d] rounded-md px-3 py-1.5 text-sm focus:border-[#58a6ff] focus:ring-1 focus:ring-[#58a6ff] outline-none transition-all"
+                        class="w-full bg-[#0d1117] !bg-[#0d1117] border border-[#30363d] rounded-md px-3 py-1.5 text-sm focus:border-[#58a6ff] focus:ring-1 focus:ring-[#58a6ff] outline-none transition-all"
                         required>
-                    <label for="username" class="block text-sm font-normal mb-2 text-[#4A00FF]">Default: admin</label>
+                    <label for="username" class="block text-xs font-normal mt-1 mb-2 text-[#8b949e]">Default:
+                        admin</label>
                 </div>
                 <div class="mb-5">
                     <div class="flex justify-between items-center mb-2">
                         <label for="password" class="block text-sm font-normal text-[#c9d1d9]">Password</label>
                     </div>
                     <input type="password" id="password" name="password"
-                        class="w-full bg-[#0d1117] border border-[#30363d] rounded-md px-3 py-1.5 text-sm focus:border-[#58a6ff] focus:ring-1 focus:ring-[#58a6ff] outline-none transition-all"
+                        class="w-full bg-[#0d1117] !bg-[#0d1117] border border-[#30363d] rounded-md px-3 py-1.5 text-sm focus:border-[#58a6ff] focus:ring-1 focus:ring-[#58a6ff] outline-none transition-all"
                         required>
-                    <label for="username" class="block text-sm font-normal mb-2 text-[#4A00FF]">Default:
+                    <label for="password" class="block text-xs font-normal mt-1 mb-2 text-[#8b949e]">Default:
                         admin123</label>
                 </div>
                 <button type="submit"
@@ -88,27 +89,25 @@
 
         <main class="flex-grow container mx-auto px-4 py-8 max-w-7xl">
             <div class="mb-8">
-                <div class="flex flex-nowrap overflow-x-auto gap-4 mb-8 border-b border-[#30363d] no-scrollbar">
+                <div id="tab-navigation"
+                    class="flex flex-wrap items-center gap-1 mb-6 border-b border-[#30363d] pb-0 px-1 sm:px-0 justify-center sm:justify-start">
                     <button data-tab="all"
-                        class="tab-btn active px-4 py-3 rounded-t-md text-sm font-semibold transition-all flex items-center gap-2 relative">
-                        <i class="fa-solid fa-list-ul text-xs"></i>
-                        All Issues
-                        <span id="all-count"
-                            class="tab-count bg-[#238636] text-white px-2 py-0.5 rounded-full text-[11px]">0</span>
+                        class="tab-btn active px-2 sm:px-4 py-2 text-[11px] sm:text-sm font-semibold flex items-center gap-1.5 sm:gap-2 transition-all whitespace-nowrap">
+                        <i class="fa-solid fa-list-ul text-[10px] sm:text-xs"></i>
+                        All <span id="all-count"
+                            class="tab-count px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[11px] bg-[#30363d]">0</span>
                     </button>
                     <button data-tab="open"
-                        class="tab-btn px-4 py-3 rounded-t-md text-sm font-semibold transition-all flex items-center gap-2 text-[#8b949e] hover:bg-[#21262d] relative">
-                        <i class="fa-solid fa-circle-dot text-xs text-[#3fb950]"></i>
-                        Open
-                        <span id="open-count"
-                            class="tab-count bg-[#30363d] text-[#8b949e] px-2 py-0.5 rounded-full text-[11px]">0</span>
+                        class="tab-btn px-2 sm:px-4 py-2 text-[11px] sm:text-sm font-semibold flex items-center gap-1.5 sm:gap-2 transition-all whitespace-nowrap">
+                        <i class="fa-solid fa-circle-dot text-[10px] sm:text-xs"></i>
+                        Open <span id="open-count"
+                            class="tab-count px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[11px]">0</span>
                     </button>
                     <button data-tab="closed"
-                        class="tab-btn px-4 py-3 rounded-t-md text-sm font-semibold transition-all flex items-center gap-2 text-[#8b949e] hover:bg-[#21262d] relative">
-                        <i class="fa-solid fa-circle-check text-xs text-[#a371f7]"></i>
-                        Closed
-                        <span id="closed-count"
-                            class="tab-count bg-[#30363d] text-[#8b949e] px-2 py-0.5 rounded-full text-[11px]">0</span>
+                        class="tab-btn px-2 sm:px-4 py-2 text-[11px] sm:text-sm font-semibold flex items-center gap-1.5 sm:gap-2 transition-all whitespace-nowrap">
+                        <i class="fa-solid fa-circle-check text-[10px] sm:text-xs"></i>
+                        Closed <span id="closed-count"
+                            class="tab-count px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[11px]">0</span>
                     </button>
                 </div>
 
@@ -126,7 +125,7 @@
     <dialog id="issue_modal" class="modal">
         <div class="modal-box max-w-2xl bg-[#161b22] text-[#c9d1d9] p-0 border border-[#30363d] shadow-2xl">
             <div id="modal-content" class="p-8">
-           
+
             </div>
         </div>
         <form method="dialog" class="modal-backdrop bg-black/60">

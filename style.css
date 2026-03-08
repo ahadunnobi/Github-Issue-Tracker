@@ -109,6 +109,7 @@
 .header-icon-circle {
   width: 42px;
   height: 42px;
+  flex-shrink: 0;
   border-radius: 50%;
   background-color: #ffffff;
   display: flex;
