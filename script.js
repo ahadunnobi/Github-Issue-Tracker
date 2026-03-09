@@ -22,8 +22,10 @@ loginForm.addEventListener('submit', (e) => {
 
     if (username === credential.username && password === credential.password) {
         showMainDashboard();
-        loadInitialData()
-        manageSpinner(false);
+        loadInitialData().catch(err => {
+            console.error('Failed to load issues:', err);
+            manageSpinner(false);
+        });
     } else {
         alert('Invalid credentials. Please use the demo credentials provided below.');
     }
@@ -49,6 +51,7 @@ const manageSpinner = (status) => {
 
 const loadInitialData = async () => {
     manageSpinner(true);
+    await new Promise(resolve => setTimeout(resolve, 300));
     const res = await fetch('https://phi-lab-server.vercel.app/api/v1/lab/issues');
     const data = await res.json();
     allIssuesStore = data.data || [];
@@ -297,6 +300,7 @@ const clearSearchBtn = document.getElementById('clear-search');
 
 const applyFilters = async () => {
     manageSpinner(true);
+    await new Promise(resolve => setTimeout(resolve, 300));
 
     const activeTab = document.querySelector('.tab-btn.active')?.getAttribute('data-tab') || 'all';
     const query = (searchInput.value || '').toLowerCase().trim();
