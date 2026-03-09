@@ -1,4 +1,3 @@
-const API_BASE_URL = 'https://phi-lab-server.vercel.app/api/v1/lab';
 const credential = {
     username: 'admin',
     password: 'admin123'
@@ -23,7 +22,8 @@ loginForm.addEventListener('submit', (e) => {
 
     if (username === credential.username && password === credential.password) {
         showMainDashboard();
-        loadInitialData();
+        loadInitialData()
+        manageSpinner(false);
     } else {
         alert('Invalid credentials. Please use the demo credentials provided below.');
     }
@@ -38,18 +38,18 @@ const manageSpinner = (status) => {
     const spinner = document.getElementById('loading-spinner');
     if (spinner && issueContainer) {
         if (status) {
-            spinner.classList.remove('hidden');
-            issueContainer.classList.add('hidden');
+            spinner.style.display = 'flex';
+            issueContainer.style.display = 'none';
         } else {
-            spinner.classList.add('hidden');
-            issueContainer.classList.remove('hidden');
+            spinner.style.display = 'none';
+            issueContainer.style.display = 'grid';
         }
     }
 };
 
 const loadInitialData = async () => {
     manageSpinner(true);
-    const res = await fetch(`${API_BASE_URL}/issues`);
+    const res = await fetch('https://phi-lab-server.vercel.app/api/v1/lab/issues');
     const data = await res.json();
     allIssuesStore = data.data || [];
     updateTabCounts();
@@ -188,7 +188,17 @@ const displayIssues = (issues = []) => {
                 <span class="text-[11.5px] text-[#8b949e]">${issue.createdAt ? new Date(issue.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A'}</span>
             </div>
         `;
-        card.addEventListener('click', () => openIssueModal(issue));
+        card.addEventListener('click', async () => {
+            manageSpinner(true);
+            const res = await fetch(`https://phi-lab-server.vercel.app/api/v1/lab/issue/${issue.id}`);
+            const data = await res.json();
+            manageSpinner(false);
+            if (data.data) {
+                openIssueModal(data.data);
+            } else {
+                openIssueModal(issue);
+            }
+        });
         issueContainer.appendChild(card);
     });
 };
@@ -287,17 +297,21 @@ const clearSearchBtn = document.getElementById('clear-search');
 
 const applyFilters = async () => {
     manageSpinner(true);
-    await new Promise(resolve => setTimeout(resolve, 300));
 
     const activeTab = document.querySelector('.tab-btn.active')?.getAttribute('data-tab') || 'all';
     const query = (searchInput.value || '').toLowerCase().trim();
 
-    const filtered = (allIssuesStore || []).filter(issue => {
+    let issuesToFilter = allIssuesStore;
+
+    if (query) {
+        const res = await fetch(`https://phi-lab-server.vercel.app/api/v1/lab/issues/search?q=${query}`);
+        const data = await res.json();
+        issuesToFilter = data.data || [];
+    }
+
+    const filtered = (issuesToFilter || []).filter(issue => {
         const statusMatch = activeTab === 'all' || (issue.status || '').toLowerCase() === activeTab;
-        const searchMatch = !query ||
-            (issue.title || '').toLowerCase().includes(query) ||
-            (issue.description || '').toLowerCase().includes(query);
-        return statusMatch && searchMatch;
+        return statusMatch;
     });
 
     displayIssues(filtered);
